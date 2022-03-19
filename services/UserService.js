@@ -1,5 +1,6 @@
 const UserModel = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -13,25 +14,29 @@ exports.getAllUsers = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    let data = await UserModel.findOne({ email: req.body.email });
-    if (data === null || data === {}) {
-      res
-        .status(200)
-        .send({ success: false, loggedIn: false, msg: "Invalid Email" });
-    } else if (data.password !== req.body.password) {
+    const user = await UserModel.findOne({ email: req.body.email });
+    if (!user)
+      return res.status(400).send({ message: "invalid email or password!" });
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    console.log(user)
+    console.log(validPassword)
+    if (!validPassword) {
       res
         .status(200)
         .send({ success: false, loggedIn: false, msg: "Invalid Password" });
     } else {
       const token = jwt.sign(
-        { _id: data._id },
+        { _id: user._id },
         "b92e81d524fa5f5f549615168941cdb46b61409b965ffbd532ba42f4bf614ce710fb8a0c82e652aa8f9d43cffd2a8bf28279856325593533054138f124b5906a"
       );
       res.status(200).send({
         success: true,
         loggedIn: true,
         msg: "Logged in",
-        user: data,
+        user: user,
         token,
       });
     }
@@ -59,8 +64,10 @@ exports.addUser = async (req, res) => {
   let data = await UserModel.find();
   const index = data.findIndex((user) => user.email === req.body.email);
   if (index === -1) {
-    const user = new UserModel(req.body);
     try {
+      const salt = await bcrypt.genSalt(Number(process.env.SALT));
+      const hashPassword = await bcrypt.hash(req.body.password, salt);
+      const user = new UserModel({ ...req.body, password: hashPassword });
       await user.save();
       res
         .status(201)
