@@ -20,8 +20,11 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: Number,
     required: true,
-    default: 1,
+    default: 0,
     enum: [0, 1],
+  },
+  verificationString: {
+    type: String,
   },
 });
 

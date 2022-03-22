@@ -1,6 +1,6 @@
 const express = require("express");
 const UserAuth = require("../middleware_auth/UserAuth");
-const JobService = require("../services/JobService");
+const JobService = require("../controllers/Job");
 const router = express.Router();
 
 router.post("/", UserAuth, JobService.addJob);
