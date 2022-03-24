@@ -20,11 +20,17 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: Number,
     required: true,
-    default: 0,
-    enum: [0, 1],
+    default: 1,
+    enum: [0, 1, 2],
+    //0 for admin, 1 for users, 2 for company management
   },
   verificationString: {
     type: String,
+  },
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+    ref: "company",
   },
 });
 

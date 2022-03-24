@@ -1,26 +1,24 @@
 const express = require("express");
 const UserAuth = require("../middleware_auth/UserAuth");
-const JobService = require("../controllers/Job");
+const JobController = require("../controllers/Job");
 const router = express.Router();
 
-router.post("/", UserAuth, JobService.addJob);
+router.post("/", JobController.addJob);
 
-router.get("/", UserAuth, JobService.getAllJobs);
+router.get("/", JobController.getAllJobs);
 
-router.get("/:id", UserAuth, JobService.getJob);
+router.get("/:id", JobController.getJob);
 
-router.put("/:id", UserAuth, JobService.updateJob);
+router.get("/jobsbycompany/:id", JobController.getJobsByCompany);
 
-router.delete("/:id", UserAuth, JobService.deleteJob);
+router.put("/:id", JobController.updateJob);
 
-router.post("/addapplicant/:id", UserAuth, JobService.addApplicant);
+router.delete("/:id", JobController.deleteJob);
 
-router.put("/updateapplicant/:id", UserAuth, JobService.updateApplicant);
+router.post("/addapplicant/:id", JobController.addApplicant);
 
-router.get(
-  "/:id/userjobstatus/:applicantId",
-  UserAuth,
-  JobService.userJobStatus
-);
+router.put("/updateapplicant/:id", JobController.updateApplicant);
+
+router.get("/:id/userjobstatus/:applicantId", JobController.userJobStatus);
 
 module.exports = router;

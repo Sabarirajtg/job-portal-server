@@ -3,7 +3,7 @@ const UserModel = require("../models/User");
 
 exports.getAllJobs = async (req, res) => {
   try {
-    let data = await JobModel.find().populate("applicants");
+    let data = await JobModel.find().populate("companyId");
     res.status(200).send({ data: [...data], status: true });
   } catch (err) {
     console.log(err);
@@ -24,7 +24,22 @@ exports.addJob = async (req, res) => {
 
 exports.getJob = async (req, res) => {
   try {
-    let data = await JobModel.findById(req.params.id);
+    let data = await JobModel.findById(req.params.id).populate("companyId");
+    if (data === null || data === {}) {
+      throw new Error("No record found");
+    }
+    res.status(200).send({ data: data, success: true });
+  } catch (err) {
+    console.log(err);
+    res.status(404).send({ success: false, msg: err.message });
+  }
+};
+
+exports.getJobsByCompany = async (req, res) => {
+  try {
+    let data = await JobModel.find({ companyId: req.params.id }).populate(
+      "companyId"
+    );
     if (data === null || data === {}) {
       throw new Error("No record found");
     }
