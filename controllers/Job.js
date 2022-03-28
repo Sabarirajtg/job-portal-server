@@ -35,6 +35,41 @@ exports.getJob = async (req, res) => {
   }
 };
 
+exports.searchJobByType = async (req, res) => {
+  try {
+    let job = await JobModel.find().populate("companyId");
+    let type = req.body.type;
+    let search = req.body.search;
+    let result = job.filter((data) => {
+      if (search == null) return data;
+      else {
+        if (
+          type === "jobType" &&
+          data.type.toLowerCase().includes(search.toLowerCase())
+        ) {
+          return data;
+        } else if (
+          type === "company" &&
+          data.companyId.name.toLowerCase().includes(search.toLowerCase())
+        ) {
+          return data;
+        } else if (
+          type === "city" &&
+          data.companyId.address.toLowerCase().includes(search.toLowerCase())
+        ) {
+          return data;
+        } else {
+          return null;
+        }
+      }
+    });
+    res.status(200).send({ data: result, success: true });
+  } catch (err) {
+    console.log(err);
+    res.status(404).send({ success: false, msg: err.message });
+  }
+};
+
 exports.getJobsByCompany = async (req, res) => {
   try {
     let data = await JobModel.find({ companyId: req.params.id }).populate(

@@ -11,6 +11,8 @@ router.get("/:id", JobController.getJob);
 
 router.get("/jobsbycompany/:id", JobController.getJobsByCompany);
 
+router.post("/search/job", JobController.searchJobByType);
+
 router.put("/:id", JobController.updateJob);
 
 router.delete("/:id", JobController.deleteJob);

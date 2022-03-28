@@ -11,7 +11,7 @@ router.get("/:id", ApplicantController.getApplicant); //
 
 router.get("/company/:id", ApplicantController.getApplicantsByCompany); //
 
-router.get("/byjob/:id", ApplicantController.getApplicantsByJob); //
+router.get("/byjob/:id/:status", ApplicantController.getApplicantsByJob); //
 
 router.get("/:jobId/:applicantId", ApplicantController.getApplicantByJobId); //
 

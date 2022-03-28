@@ -42,7 +42,10 @@ exports.getApplicantsByCompany = async (req, res) => {
 
 exports.getApplicantsByJob = async (req, res) => {
   try {
-    let data = await ApplicantModel.find({ jobId: req.params.id })
+    let data = await ApplicantModel.find({
+      jobId: req.params.id,
+      status: req.params.status,
+    })
       .populate("jobId")
       .populate("applicantId")
       .populate("companyId");
